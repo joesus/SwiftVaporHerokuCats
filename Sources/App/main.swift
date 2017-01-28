@@ -15,16 +15,21 @@ drop.get("version") { request in
     } else {
         return "Driver did not initialize"
     }
-
-}
-
-drop.get("cats") { request in
-    return try JSON(node: Cat.all().makeNode())
 }
 
 drop.get("test") { request in
     var cat = Cat(name: "First", adoptable: true, age: 1, city: "Denver", state: "CO", cutenessLevel: 4)
     try cat.save()
+    return try JSON(node: Cat.all().makeNode())
+}
+
+drop.post("cat") { request in
+    var cat = try Cat(node: request.json)
+    try cat.save()
+    return cat
+}
+
+drop.get("cats") { request in
     return try JSON(node: Cat.all().makeNode())
 }
 

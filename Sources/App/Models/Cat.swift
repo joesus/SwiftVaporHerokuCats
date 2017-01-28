@@ -1,7 +1,5 @@
 import Vapor
 
-typealias Favorites = [String: Any]
-
 struct CatTableKeys {
     static let tableName = "cats"
     static let id = "id"
@@ -44,7 +42,7 @@ final class Cat: Model {
     init(node: Node, in context: Context) throws {
         self.id = try node.extract(CatTableKeys.id)
         self.name = try node.extract(CatTableKeys.name)
-        self.adoptable = try node.extract(CatTableKeys.adoptable)
+        self.adoptable = try node.extract(CatTableKeys.adoptable) ?? false
         self.age = try node.extract(CatTableKeys.age)
         self.city = try node.extract(CatTableKeys.city)
         self.state = try node.extract(CatTableKeys.state)
@@ -59,19 +57,22 @@ final class Cat: Model {
             CatTableKeys.age: age,
             CatTableKeys.city: city,
             CatTableKeys.state: state,
-            CatTableKeys.cutenessLevel: cutenessLevel
+            CatTableKeys.cutenessLevel: cutenessLevel,
         ])
     }
+}
 
+//MARK: - Database Setup
+extension Cat {
     static func prepare(_ database: Database) throws {
         try database.create(CatTableKeys.tableName) { cats in
             cats.id()
             cats.string(CatTableKeys.name)
-            cats.bool(CatTableKeys.adoptable)
-            cats.int(CatTableKeys.age)
-            cats.string(CatTableKeys.city)
-            cats.string(CatTableKeys.state)
-            cats.int(CatTableKeys.cutenessLevel)
+            cats.bool(CatTableKeys.adoptable, optional: true)
+            cats.int(CatTableKeys.age, optional: true)
+            cats.string(CatTableKeys.city, optional: true)
+            cats.string(CatTableKeys.state, optional: true)
+            cats.int(CatTableKeys.cutenessLevel, optional: true)
         }
     }
 

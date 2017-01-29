@@ -80,3 +80,9 @@ extension Cat {
         try database.delete(CatTableKeys.tableName)
     }
 }
+
+extension Cat {
+    func favorites() throws -> [Favorite] {
+        return try children(nil, Favorite.self).all()
+    }
+}

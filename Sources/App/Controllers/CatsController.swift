@@ -2,16 +2,28 @@ import Vapor
 import HTTP
 import VaporPostgreSQL
 
-final class CatsController: ResourceRepresentable {
+final class CatsController {
 
-    func makeResource() -> Resource<Cat> {
-        return Resource(
-            index: cats,
-            store: create,
-            show: show,
-            modify: update,
-            destroy: delete
-        )
+//    func makeResource() -> Resource<Cat> {
+//        return Resource(
+//            index: cats,
+//            store: create,
+//            show: show,
+//            modify: update,
+//            destroy: delete
+//        )
+//    }
+
+    func addRoutes(drop: Droplet) {
+        let basic = drop.grouped("cats")
+        basic.get(handler: cats)
+        basic.post(handler: create)
+        basic.delete(Cat.self, handler: delete)
+        basic.get(Cat.self, "favorites", handler: favoritesIndex)
+    }
+
+    func cats(request: Request) throws -> ResponseRepresentable {
+        return try JSON(node: Cat.all().makeJSON())
     }
 
     func create(request: Request) throws -> ResponseRepresentable {
@@ -46,8 +58,9 @@ final class CatsController: ResourceRepresentable {
         }
     }
 
-    func cats(request: Request) throws -> ResponseRepresentable {
-        return try JSON(node: Cat.all().makeJSON())
+    func favoritesIndex(request: Request, cat: Cat) throws -> ResponseRepresentable {
+        let children = try cat.favorites()
+        return try JSON(node: children.makeNode())
     }
 }
 

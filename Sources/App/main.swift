@@ -4,8 +4,10 @@ import VaporPostgreSQL
 let drop = Droplet()
 
 try drop.addProvider(VaporPostgreSQL.Provider.self)
-drop.preparations = [Cat.self]
+drop.preparations += Cat.self
+drop.preparations += Favorite.self
 
-drop.resource("cats", CatsController())
+CatsController().addRoutes(drop: drop)
+FavoritesController().addRoutes(drop: drop)
 
 drop.run()

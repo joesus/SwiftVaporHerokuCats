@@ -7,6 +7,7 @@ final class CatsController {
     func addRoutes(drop: Droplet) {
         let basic = drop.grouped("cats")
         basic.get(handler: cats)
+        basic.get(Cat.self, handler: cat)
         basic.post(handler: create)
         basic.delete(Cat.self, handler: delete)
         basic.get(Cat.self, "favorites", handler: favoritesIndex)
@@ -14,6 +15,10 @@ final class CatsController {
 
     func cats(request: Request) throws -> ResponseRepresentable {
         return try JSON(node: Cat.all().makeJSON())
+    }
+
+    func cat(request: Request, cat: Cat) throws -> ResponseRepresentable {
+        return cat
     }
 
     func create(request: Request) throws -> ResponseRepresentable {

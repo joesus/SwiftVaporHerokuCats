@@ -1,6 +1,6 @@
 import Vapor
 
-struct FavoritesKeys {
+struct FavoriteKeys {
     static var tableName = "favorites"
     static var id = "id"
     static var catId = "cat_id"
@@ -25,18 +25,18 @@ final class Favorite: Model {
     }
 
     init(node: Node, in context: Context) throws {
-        id = try node.extract(FavoritesKeys.id)
-        category = try node.extract(FavoritesKeys.category)
-        value = try node.extract(FavoritesKeys.value)
-        catId = try node.extract(FavoritesKeys.catId)
+        id = try node.extract(FavoriteKeys.id)
+        category = try node.extract(FavoriteKeys.category)
+        value = try node.extract(FavoriteKeys.value)
+        catId = try node.extract(FavoriteKeys.catId)
     }
 
     func makeNode(context: Context) throws -> Node {
         return try Node(node: [
-            FavoritesKeys.id: id,
-            FavoritesKeys.category: category,
-            FavoritesKeys.value: value,
-            FavoritesKeys.catId: catId
+            FavoriteKeys.id: id,
+            FavoriteKeys.category: category,
+            FavoriteKeys.value: value,
+            FavoriteKeys.catId: catId
         ])
     }
 }
@@ -44,16 +44,16 @@ final class Favorite: Model {
 //MARK: - Database Setup
 extension Favorite {
     static func prepare(_ database: Database) throws {
-        try database.create(FavoritesKeys.tableName) { favorites in
+        try database.create(FavoriteKeys.tableName) { favorites in
             favorites.id()
-            favorites.string(FavoritesKeys.category)
-            favorites.string(FavoritesKeys.value)
+            favorites.string(FavoriteKeys.category)
+            favorites.string(FavoriteKeys.value)
             favorites.parent(Cat.self, optional: false)
         }
     }
 
     static func revert(_ database: Database) throws {
-        try database.delete(FavoritesKeys.tableName)
+        try database.delete(FavoriteKeys.tableName)
     }
 }
 

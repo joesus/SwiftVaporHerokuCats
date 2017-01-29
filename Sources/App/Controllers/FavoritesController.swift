@@ -4,16 +4,6 @@ import VaporPostgreSQL
 
 final class FavoritesController {
 
-//    func makeResource() -> Resource<Favorites> {
-//        return Resource(
-//            index: index,
-//            store: create,
-//            show: show,
-//            modify: update,
-//            destroy: delete
-//        )
-//    }
-
     func addRoutes(drop: Droplet) {
         let basic = drop.grouped("favorites")
         basic.get(handler: index)
@@ -22,6 +12,10 @@ final class FavoritesController {
         basic.patch(Favorite.self, handler: update)
         basic.delete(Favorite.self, handler: delete)
         basic.get(Favorite.self, "cat", handler: catShow)
+    }
+
+    func index(request: Request) throws -> ResponseRepresentable {
+        return try JSON(node: Favorite.all().makeJSON())
     }
 
     func create(request: Request) throws -> ResponseRepresentable {
@@ -46,10 +40,6 @@ final class FavoritesController {
     func delete(request: Request, favorites: Favorite) throws -> ResponseRepresentable {
         try favorites.delete()
         return JSON([:])
-    }
-
-    func index(request: Request) throws -> ResponseRepresentable {
-        return try JSON(node: Favorite.all().makeJSON())
     }
 
     func catShow(request: Request, favorite: Favorite) throws -> ResponseRepresentable {

@@ -4,16 +4,6 @@ import VaporPostgreSQL
 
 final class CatsController {
 
-//    func makeResource() -> Resource<Cat> {
-//        return Resource(
-//            index: cats,
-//            store: create,
-//            show: show,
-//            modify: update,
-//            destroy: delete
-//        )
-//    }
-
     func addRoutes(drop: Droplet) {
         let basic = drop.grouped("cats")
         basic.get(handler: cats)

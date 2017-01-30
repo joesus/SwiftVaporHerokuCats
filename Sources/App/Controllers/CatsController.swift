@@ -19,8 +19,8 @@ final class CatsController {
     }
 
     func cat(request: Request, cat: Cat) throws -> ResponseRepresentable {
-        let favs = try cat.favorites()
-        print(favs)
+        let favs = try cat.allFavorites()
+        cat.favorites = favs
         return cat
     }
 
@@ -39,7 +39,7 @@ final class CatsController {
     }
 
     func delete(request: Request, cat: Cat) throws -> ResponseRepresentable {
-        let favs = try cat.favorites()
+        let favs = try cat.allFavorites()
         try favs.forEach { try $0.delete() }
         try cat.delete()
         return JSON([:])
@@ -55,7 +55,7 @@ final class CatsController {
     }
 
     func favoritesIndex(request: Request, cat: Cat) throws -> ResponseRepresentable {
-        let children = try cat.favorites()
+        let children = try cat.allFavorites()
         return try JSON(node: children.makeNode())
     }
 

@@ -13,6 +13,7 @@ struct CatTableKeys {
     static let greeting = "greeting"
     static let pictureURL = "pictureURL"
     static let weight = "weight"
+    static let favorites = "favorites"
 }
 
 final class Cat: Model {
@@ -26,6 +27,7 @@ final class Cat: Model {
     var city: String?
     var state: String?
     var cutenessLevel: Int?
+    var favorites = [Favorite]()
 
     init(name: String? = "", adoptable: Bool = false, age: Int?, city: String?, state: String?, cutenessLevel: Int?) {
         self.id = nil
@@ -60,6 +62,19 @@ final class Cat: Model {
             CatTableKeys.cutenessLevel: cutenessLevel,
         ])
     }
+
+    func makeJSON() throws -> JSON {
+        return try JSON(node: [
+            CatTableKeys.id: id,
+            CatTableKeys.name: name,
+            CatTableKeys.adoptable: adoptable,
+            CatTableKeys.age: age,
+            CatTableKeys.city: city,
+            CatTableKeys.state: state,
+            CatTableKeys.cutenessLevel: cutenessLevel,
+            CatTableKeys.favorites: favorites.makeJSON()
+        ])
+    }
 }
 
 //MARK: - Database Setup
@@ -82,7 +97,7 @@ extension Cat {
 }
 
 extension Cat {
-    func favorites() throws -> [Favorite] {
+    func allFavorites() throws -> [Favorite] {
         return try children(nil, Favorite.self).all()
     }
 }

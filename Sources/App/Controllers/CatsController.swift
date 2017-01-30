@@ -8,6 +8,7 @@ final class CatsController {
         let basic = drop.grouped("cats")
         basic.get(handler: cats)
         basic.get(Cat.self, handler: cat)
+        basic.patch(Cat.self, handler: update)
         basic.post(handler: create)
         basic.delete(Cat.self, handler: delete)
         basic.get(Cat.self, "favorites", handler: favoritesIndex)
@@ -18,6 +19,8 @@ final class CatsController {
     }
 
     func cat(request: Request, cat: Cat) throws -> ResponseRepresentable {
+        let favs = try cat.favorites()
+        print(favs)
         return cat
     }
 
@@ -27,19 +30,17 @@ final class CatsController {
         return cat
     }
 
-    func show(request: Request, cat: Cat) throws -> ResponseRepresentable {
-        return cat
-    }
-
     func update(request: Request, cat: Cat) throws -> ResponseRepresentable {
         let new = try request.cat()
         var cat = cat
-        cat.name = new.name
+        setAttributesFor(cat, with: new)
         try cat.save()
         return cat
     }
 
     func delete(request: Request, cat: Cat) throws -> ResponseRepresentable {
+        let favs = try cat.favorites()
+        try favs.forEach { try $0.delete() }
         try cat.delete()
         return JSON([:])
     }
@@ -56,6 +57,10 @@ final class CatsController {
     func favoritesIndex(request: Request, cat: Cat) throws -> ResponseRepresentable {
         let children = try cat.favorites()
         return try JSON(node: children.makeNode())
+    }
+
+    func setAttributesFor(_ cat: Cat, with new: Cat) {
+        cat.name = new.name
     }
 }
 

@@ -27,9 +27,14 @@ final class Cat: Model {
     var city: String?
     var state: String?
     var cutenessLevel: Int?
+    var gender: String?
+    var greeting: String?
+    var pictureURL: String?
+    var weight: Int?
     var favorites = [Favorite]()
 
-    init(name: String? = "", adoptable: Bool = false, age: Int?, city: String?, state: String?, cutenessLevel: Int?) {
+    init(name: String? = "", adoptable: Bool = false, age: Int?, city: String?, state: String?,
+         cutenessLevel: Int?, gender: String?, greeting: String?, pictureURL: String?, weight: Int?) {
         self.id = nil
         self.name = name
         self.adoptable = adoptable
@@ -39,6 +44,10 @@ final class Cat: Model {
         if let cutenessLevel = cutenessLevel {
             self.cutenessLevel = cutenessLevel
         }
+        self.gender = gender
+        self.greeting = greeting
+        self.pictureURL = pictureURL
+        self.weight = weight
     }
 
     init(node: Node, in context: Context) throws {
@@ -49,6 +58,10 @@ final class Cat: Model {
         self.city = try node.extract(CatTableKeys.city)
         self.state = try node.extract(CatTableKeys.state)
         self.cutenessLevel = try node.extract(CatTableKeys.cutenessLevel)
+        self.gender = try node.extract(CatTableKeys.gender)
+        self.greeting = try node.extract(CatTableKeys.greeting)
+        self.pictureURL = try node.extract(CatTableKeys.pictureURL)
+        self.weight = try node.extract(CatTableKeys.weight)
     }
 
     func makeNode(context: Context) throws -> Node {
@@ -60,6 +73,7 @@ final class Cat: Model {
             CatTableKeys.city: city,
             CatTableKeys.state: state,
             CatTableKeys.cutenessLevel: cutenessLevel,
+            CatTableKeys.gender: gender
         ])
     }
 
@@ -72,7 +86,11 @@ final class Cat: Model {
             CatTableKeys.city: city,
             CatTableKeys.state: state,
             CatTableKeys.cutenessLevel: cutenessLevel,
-            CatTableKeys.favorites: favorites.makeJSON()
+            CatTableKeys.favorites: favorites.makeJSON(),
+            CatTableKeys.gender: gender,
+            CatTableKeys.greeting: greeting,
+            CatTableKeys.pictureURL: pictureURL,
+            CatTableKeys.weight: weight
         ])
     }
 }
@@ -88,6 +106,10 @@ extension Cat {
             cats.string(CatTableKeys.city, optional: true)
             cats.string(CatTableKeys.state, optional: true)
             cats.int(CatTableKeys.cutenessLevel, optional: true)
+            cats.string(CatTableKeys.gender, optional: true)
+            cats.string(CatTableKeys.greeting, optional: true)
+            cats.int(CatTableKeys.weight, optional: true)
+            cats.string(CatTableKeys.pictureURL, optional: true)
         }
     }
 

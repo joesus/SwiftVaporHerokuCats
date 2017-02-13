@@ -60,7 +60,36 @@ final class CatsController {
     }
 
     func setAttributesFor(_ cat: Cat, with new: Cat) {
-        cat.name = new.name
+        if cat.name != new.name {
+            cat.name = new.name
+        }
+        if cat.age != new.age {
+            cat.age = new.age
+        }
+        if cat.city != new.city {
+            cat.city = new.city
+        }
+        if cat.state != new.state {
+            cat.state = new.state
+        }
+        if cat.cutenessLevel != new.cutenessLevel {
+            cat.cutenessLevel = new.cutenessLevel
+        }
+        if cat.gender != new.gender {
+            cat.gender = new.gender
+        }
+        if cat.adoptable != new.adoptable {
+            cat.adoptable = new.adoptable
+        }
+        if cat.greeting != new.greeting {
+            cat.greeting = new.greeting
+        }
+        if cat.pictureURL != new.pictureURL {
+            cat.pictureURL = new.pictureURL
+        }
+        if cat.weight != new.weight {
+            cat.weight = new.weight
+        }
     }
 }
 

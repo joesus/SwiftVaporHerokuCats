@@ -4,6 +4,7 @@ struct CatTableKeys {
     static let tableName = "cats"
     static let id = "id"
     static let name = "name"
+    static let about = "about"
     static let adoptable = "adoptable"
     static let age = "age"
     static let city = "city"
@@ -22,6 +23,7 @@ final class Cat: Model {
     var exists: Bool = false
 
     var name: String?
+    var about: String?
     var adoptable: Bool
     var age: Int? = 0
     var city: String?
@@ -33,10 +35,11 @@ final class Cat: Model {
     var weight: Int?
     var favorites = [Favorite]()
 
-    init(name: String? = "", adoptable: Bool = false, age: Int?, city: String?, state: String?,
+    init(name: String? = "", about: String?, adoptable: Bool = false, age: Int?, city: String?, state: String?,
          cutenessLevel: Int?, gender: String?, greeting: String?, pictureURL: String?, weight: Int?) {
         self.id = nil
         self.name = name
+        self.about = about
         self.adoptable = adoptable
         self.age = age
         self.city = city
@@ -53,6 +56,7 @@ final class Cat: Model {
     init(node: Node, in context: Context) throws {
         self.id = try node.extract(CatTableKeys.id)
         self.name = try node.extract(CatTableKeys.name)
+        self.about = try node.extract(CatTableKeys.about)
         self.adoptable = try node.extract(CatTableKeys.adoptable) ?? false
         self.age = try node.extract(CatTableKeys.age)
         self.city = try node.extract(CatTableKeys.city)
@@ -68,7 +72,9 @@ final class Cat: Model {
         return try Node(node: [
             CatTableKeys.id: id,
             CatTableKeys.name: name,
+            CatTableKeys.about: about,
             CatTableKeys.adoptable: adoptable,
+            CatTableKeys.favorites: favorites.makeJSON(),
             CatTableKeys.age: age,
             CatTableKeys.city: city,
             CatTableKeys.state: state,
@@ -81,6 +87,7 @@ final class Cat: Model {
         return try JSON(node: [
             CatTableKeys.id: id,
             CatTableKeys.name: name,
+            CatTableKeys.about: about,
             CatTableKeys.adoptable: adoptable,
             CatTableKeys.age: age,
             CatTableKeys.city: city,
@@ -101,6 +108,7 @@ extension Cat {
         try database.create(CatTableKeys.tableName) { cats in
             cats.id()
             cats.string(CatTableKeys.name)
+            cats.string(CatTableKeys.about, optional: true)
             cats.bool(CatTableKeys.adoptable, optional: true)
             cats.int(CatTableKeys.age, optional: true)
             cats.string(CatTableKeys.city, optional: true)

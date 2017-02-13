@@ -15,7 +15,12 @@ final class CatsController {
     }
 
     func cats(request: Request) throws -> ResponseRepresentable {
-        return try JSON(node: Cat.all().makeJSON())
+        let cats = try Cat.all()
+        for cat in cats {
+            let favs = try cat.allFavorites()
+            cat.favorites = favs
+        }
+        return try JSON(node: cats.makeJSON())
     }
 
     func cat(request: Request, cat: Cat) throws -> ResponseRepresentable {
@@ -60,6 +65,9 @@ final class CatsController {
     }
 
     func setAttributesFor(_ cat: Cat, with new: Cat) {
+        if cat.about != new.about {
+            cat.about = new.about
+        }
         if cat.name != new.name {
             cat.name = new.name
         }

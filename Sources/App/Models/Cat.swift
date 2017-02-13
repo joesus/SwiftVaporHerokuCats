@@ -74,13 +74,48 @@ final class Cat: Model {
             CatTableKeys.name: name,
             CatTableKeys.about: about,
             CatTableKeys.adoptable: adoptable,
-            CatTableKeys.favorites: favorites.makeJSON(),
             CatTableKeys.age: age,
             CatTableKeys.city: city,
             CatTableKeys.state: state,
             CatTableKeys.cutenessLevel: cutenessLevel,
             CatTableKeys.gender: gender
         ])
+    }
+
+    func makeAllCatsJSON() throws -> JSON {
+        if let favs = try? favorites.makeJSON() {
+            return try JSON(node: [
+                CatTableKeys.id: id,
+                CatTableKeys.name: name,
+                CatTableKeys.about: about,
+                CatTableKeys.adoptable: adoptable,
+                CatTableKeys.age: age,
+                CatTableKeys.city: city,
+                CatTableKeys.state: state,
+                CatTableKeys.cutenessLevel: cutenessLevel,
+                CatTableKeys.favorites: favs,
+                CatTableKeys.gender: gender,
+                CatTableKeys.greeting: greeting,
+                CatTableKeys.pictureURL: pictureURL,
+                CatTableKeys.weight: weight
+            ])
+        } else {
+            return try JSON(node: [
+                CatTableKeys.id: id,
+                CatTableKeys.name: name,
+                CatTableKeys.about: about,
+                CatTableKeys.adoptable: adoptable,
+                CatTableKeys.age: age,
+                CatTableKeys.city: city,
+                CatTableKeys.state: state,
+                CatTableKeys.cutenessLevel: cutenessLevel,
+                CatTableKeys.favorites: favorites.makeJSON(),
+                CatTableKeys.gender: gender,
+                CatTableKeys.greeting: greeting,
+                CatTableKeys.pictureURL: pictureURL,
+                CatTableKeys.weight: weight
+            ])
+        }
     }
 
     func makeJSON() throws -> JSON {

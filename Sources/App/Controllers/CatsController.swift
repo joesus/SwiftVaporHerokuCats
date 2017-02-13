@@ -20,7 +20,8 @@ final class CatsController {
             let favs = try cat.allFavorites()
             cat.favorites = favs
         }
-        return try JSON(node: cats.makeJSON())
+
+        return try JSON(node: cats.flatMap { try? $0.makeAllCatsJSON() })
     }
 
     func cat(request: Request, cat: Cat) throws -> ResponseRepresentable {
